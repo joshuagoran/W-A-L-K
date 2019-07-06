@@ -15,7 +15,7 @@
         <script>
             // set up checkStatus function
             checkStatus = () => {
-                axios.get('http://localhost:8080/status').then((response) => {
+                axios.get('https://w-a-l-k.azurewebsites.net/status').then((response) => {
                     let msg = response.data ? 
                         'Lila has been walked!' :
                         'Lila has not been walked :(';
