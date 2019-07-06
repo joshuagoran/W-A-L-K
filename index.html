@@ -1,27 +1,32 @@
 <html>
     <head>
         <title>W-A-L-K</title>
+        <!-- imports Bootstrap, checks integrity while doing so -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
-        <!-- display status as h1 html -->
+        <!-- display status as h1 html within Bootstrap alert class -->
         <div class="alert" role="alert">
             <h1 id="status"></h1>
         </div>
         
-
-
+        <!-- imports axios.js, checks integrity while doing so -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
         <script>
             // set up checkStatus function
             checkStatus = () => {
-                axios.get('http://localhost:8080/status').then((response) => {
+                axios.get('https://w-a-l-k.azurewebsites.net/status').then((response) => {
+                    /* sets var msg to either string based on
+                    ternary operator checking truthy/falsy API status */
                     let msg = response.data ? 
                         'Lila has been walked!' :
                         'Lila has not been walked :(';
 
+                    /* gets all the elements with the class name 'alert', puts into an array
+                     alert is set to equal the first/only element in the array */
                     let alert = document.getElementsByClassName('alert')[0];
 
+                    // removes/adds alert types based on truthy/falsy API status
                     if(response.data) {
                         alert.classList.remove('alert-danger');
                         alert.classList.add('alert-success');
@@ -30,16 +35,16 @@
                         alert.classList.add('alert-danger');
                     }
 
+                    // makes the text within the 'status' id tags equal to the var msg
                     document.getElementById('status').innerText = msg;
                 });
             };
 
-            // check the status on page load
+            // check the status on page load  
             checkStatus();
 
-            // start polling for changes
+            // start polling for changes every 10 seconds, runs as long as page is active
             setInterval(checkStatus, 10000);
-
         </script>
     </body>
 </html>
