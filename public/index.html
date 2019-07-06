@@ -12,8 +12,8 @@
 
         <!-- button to reset or log a walk, changes message based on API state
         TODO API URL and redirect back to main page?  -->
-        <button type="button" class="btn btn-secondary btn-lg m-2" id="button"></button>
- 
+        <a href="https://w-a-l-k.azurewebsites.net/set/false" class="btn btn-secondary btn-lg m-2" id="btn-true" role="button">Reset to "not-walked"</a>
+        <a href="https://w-a-l-k.azurewebsites.net/set/true" class="btn btn-secondary btn-lg m-2" id="btn-false" role="button">I walked her!</a>
 
         <!-- imports axios.js, checks integrity while doing so -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
@@ -27,26 +27,27 @@
                         'Lila has been walked!' :
                         'Lila has not been walked :(';
 
-                    let buttonMsg = response.data ? 
-                        'Reset to not-walked' :
-                        'I walked her!';
-
                     /* gets all the elements with the class name 'alert', puts into an array
                      alertElements is set to equal the first/only element in the array */
                     let alertElements = document.getElementsByClassName('alert')[0];
+                    let buttonTrue = document.getElementById('btn-true');
+                    let buttonFalse = document.getElementById('btn-false');
 
-                    // removes/adds alert types based on truthy/falsy API status
+                    // removes/adds alert types and buttons based on truthy/falsy API status
                     if(response.data) {
                         alertElements.classList.remove('alert-danger');
                         alertElements.classList.add('alert-success');
+                        buttonFalse.classList.add('d-none');
+                        buttonTrue.classList.remove('d-none');
                     } else {
                         alertElements.classList.remove('alert-success');
                         alertElements.classList.add('alert-danger');
+                        buttonTrue.classList.add('d-none');
+                        buttonFalse.classList.remove('d-none');
                     }
 
                     // makes the text within the 'status' id tags equal to the vars ____Msgs
                     document.getElementById('status').innerText = mainMsg;
-                    document.getElementById('button').innerText = buttonMsg;
                 });
             };
 

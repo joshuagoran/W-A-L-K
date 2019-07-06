@@ -34,6 +34,7 @@ app.get('/set/:value', (req, res) => {
     set(value).then((response) => {
         res.send(response.data);
     });
+    res.redirect('/');
 });
 
 // set() function, changes status by going to path for true/false value
