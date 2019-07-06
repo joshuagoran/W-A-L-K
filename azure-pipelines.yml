@@ -18,3 +18,27 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.Repository.LocalPath)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(c963bee2-dbb1-43e8-adec-1a3ed56a595f)'
+    appType: 'webApp'
+    WebAppName: 'W-A-L-K'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    WebConfigParameters: -Handler iisnode -NodeStartFile server.js -appType node
+    AppSettings: '-WEBSITE_NODE_DEFAULT_VERSION 8.11.1'
