@@ -31,7 +31,7 @@ set = (value) => {
     return axios.post(`${keyStoreUrl}/${value}`);
 };
 
-const port = 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`API started on port ${port}`);
 });
