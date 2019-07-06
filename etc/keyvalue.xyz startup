@@ -1,0 +1,37 @@
+Last login: Thu Jul  4 12:10:07 on ttys000
+✔ ~/workspace/w-a-l-k 
+12:39 $ curl -X POST https://api.keyvalue.xyz/new/josh
+https://api.keyvalue.xyz/8627250f/josh
+✔ ~/workspace/w-a-l-k 
+12:40 $ curl -X POST https://api.keyvalue.xyz/8627250f/josh
+✔ ~/workspace/w-a-l-k 
+12:40 $ curl -X POST https://api.keyvalue.xyz/8627250f/josh/true
+✔ ~/workspace/w-a-l-k 
+12:41 $ curl https://api.keyvalue.xyz/8627250f/josh/
+404 page not found
+✔ ~/workspace/w-a-l-k 
+12:41 $ curl -X POST https://api.keyvalue.xyz/8627250f/josh/true
+✔ ~/workspace/w-a-l-k 
+12:42 $ curl https://api.keyvalue.xyz/8627250f/josh/
+404 page not found
+✔ ~/workspace/w-a-l-k 
+12:42 $ curl -X POST https://api.keyvalue.xyz/new/josh
+https://api.keyvalue.xyz/e6bf679e/josh
+✔ ~/workspace/w-a-l-k 
+12:42 $ curl -X POST https://api.keyvalue.xyz/e6bf679e/josh/true
+✔ ~/workspace/w-a-l-k 
+12:43 $ curl 
+✘-1 ~/workspace/w-a-l-k 
+12:43 $ curl https://api.keyvalue.xyz/e6bf679e/josh
+true
+✔ ~/workspace/w-a-l-k 
+12:43 $ npm i axios --save
+npm WARN w-a-l-k@1.0.0 No description
+npm WARN w-a-l-k@1.0.0 No repository field.
+
++ axios@0.19.0
+added 4 packages from 8 contributors and audited 131 packages in 2.558s
+found 0 vulnerabilities
+
+✔ ~/workspace/w-a-l-k 
+12:44 $ 

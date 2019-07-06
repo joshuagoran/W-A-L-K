@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>W-A-L-K</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <!-- display status as h1 html -->
+        <div class="alert" role="alert">
+            <h1 id="status"></h1>
+        </div>
+        
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
+        <script>
+            // set up checkStatus function
+            checkStatus = () => {
+                axios.get('http://localhost:8080/status').then((response) => {
+                    let msg = response.data ? 
+                        'Lila has been walked!' :
+                        'Lila has not been walked :(';
+
+                    let alert = document.getElementsByClassName('alert')[0];
+
+                    if(response.data) {
+                        alert.classList.remove('alert-danger');
+                        alert.classList.add('alert-success');
+                    } else {
+                        alert.classList.remove('alert-success');
+                        alert.classList.add('alert-danger');
+                    }
+
+                    document.getElementById('status').innerText = msg;
+                });
+            };
+
+            // check the status on page load
+            checkStatus();
+
+            // start polling for changes
+            setInterval(checkStatus, 10000);
+
+        </script>
+    </body>
+</html>
