@@ -9,7 +9,12 @@
         <div class="alert" role="alert">
             <h1 id="status"></h1>
         </div>
-        
+
+        <!-- button to reset or log a walk, changes message based on API state
+        TODO API URL and redirect back to main page?  -->
+        <button type="button" class="btn btn-secondary btn-lg m-2" id="button"></button>
+ 
+
         <!-- imports axios.js, checks integrity while doing so -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
         <script>
@@ -18,25 +23,30 @@
                 axios.get('https://w-a-l-k.azurewebsites.net/status').then((response) => {
                     /* sets var msg to either string based on
                     ternary operator checking truthy/falsy API status */
-                    let msg = response.data ? 
+                    let mainMsg = response.data ? 
                         'Lila has been walked!' :
                         'Lila has not been walked :(';
 
+                    let buttonMsg = response.data ? 
+                        'Reset to not-walked' :
+                        'I walked her!';
+
                     /* gets all the elements with the class name 'alert', puts into an array
-                     alert is set to equal the first/only element in the array */
-                    let alert = document.getElementsByClassName('alert')[0];
+                     alertElements is set to equal the first/only element in the array */
+                    let alertElements = document.getElementsByClassName('alert')[0];
 
                     // removes/adds alert types based on truthy/falsy API status
                     if(response.data) {
-                        alert.classList.remove('alert-danger');
-                        alert.classList.add('alert-success');
+                        alertElements.classList.remove('alert-danger');
+                        alertElements.classList.add('alert-success');
                     } else {
-                        alert.classList.remove('alert-success');
-                        alert.classList.add('alert-danger');
+                        alertElements.classList.remove('alert-success');
+                        alertElements.classList.add('alert-danger');
                     }
 
-                    // makes the text within the 'status' id tags equal to the var msg
-                    document.getElementById('status').innerText = msg;
+                    // makes the text within the 'status' id tags equal to the vars ____Msgs
+                    document.getElementById('status').innerText = mainMsg;
+                    document.getElementById('button').innerText = buttonMsg;
                 });
             };
 

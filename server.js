@@ -17,6 +17,10 @@ schedule.scheduleJob('0 0 0 * * *', () => {
     });
 });
 
+app.get('/', (req, res) => {
+    res.redirect('https://w-a-l-k.azurewebsites.net/index.html');
+});
+
 // gets current status
 app.get('/status', (req, res) => {
     axios.get(keyStoreUrl).then((response) => {
