@@ -14,15 +14,15 @@
 
         <!-- button to reset or log a walk, changes message based on API state
         TODO API URL and redirect back to main page?  -->
-        <a href="https://w-a-l-k.azurewebsites.net/set/false" class="btn btn-secondary btn-lg m-2" id="btn-true" role="button">Reset to "not-walked"</a>
-        <a href="https://w-a-l-k.azurewebsites.net/set/true" class="btn btn-secondary btn-lg m-2" id="btn-false" role="button">I walked her!</a>
+        <a href="set/false" class="btn btn-secondary btn-lg m-2 d-none" id="btn-true" role="button">Reset to "not-walked"</a>
+        <a href="set/true" class="btn btn-secondary btn-lg m-2 d-none" id="btn-false" role="button">I walked her!</a>
 
         <!-- imports axios.js, checks integrity while doing so -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
         <script>
             // set up checkStatus function
             checkStatus = () => {
-                axios.get('https://w-a-l-k.azurewebsites.net/status').then((response) => {
+                axios.get('status').then((response) => {
                     /* sets var msg to either string based on
                     ternary operator checking truthy/falsy API status */
                     let mainMsg = response.data ? 

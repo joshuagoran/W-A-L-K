@@ -9,6 +9,9 @@ const keyStoreUrl = 'https://api.keyvalue.xyz/e6bf679e/josh';
 // cors allows access from different origins - without it, API wouldn't run due to Same-origin policy
 app.use(cors());
 
+// register a static directory. allows retrieval of index.html which would otherwise result in a 404.
+app.use(express.static('public'))
+
 // schedules reset to take place automatically every night at midnight
 schedule.scheduleJob('0 0 0 * * *', () => {
     set(false).then((response) => {
