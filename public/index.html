@@ -1,63 +1,140 @@
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>W-A-L-K</title>
-        <!-- imports Bootstrap, checks integrity while doing so -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-    <body>
-        <!-- display status as h1 html within Bootstrap alert class -->
-        <div class="alert" role="alert">
-            <h1 id="status"></h1>
-        </div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- button to reset or log a walk, changes message based on API state
-        TODO API URL and redirect back to main page?  -->
-        <a href="set/false" class="btn btn-secondary btn-lg m-2 d-none" id="btn-true" role="button">Reset to "not-walked"</a>
-        <a href="set/true" class="btn btn-secondary btn-lg m-2 d-none" id="btn-false" role="button">I walked her!</a>
+    <title>W-A-L-K</title>
+    <!-- imports Bootstrap, checks integrity while doing so -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
 
-        <!-- imports axios.js, checks integrity while doing so -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js" integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
-        <script>
-            // set up checkStatus function
-            checkStatus = () => {
-                axios.get('status').then((response) => {
-                    /* sets var msg to either string based on
-                    ternary operator checking truthy/falsy API status */
-                    let mainMsg = response.data ? 
-                        'Lila has been walked!' :
-                        'Lila has not been walked :(';
+<style>
+    /* sets Google Map size */
+    #map {
+        height: 60%;
+    }
 
-                    /* gets all the elements with the class name 'alert', puts into an array
-                     alertElements is set to equal the first/only element in the array */
-                    let alertElements = document.getElementsByClassName('alert')[0];
-                    let buttonTrue = document.getElementById('btn-true');
-                    let buttonFalse = document.getElementById('btn-false');
+    #map-with-text {
+        font-style: italic;
+        margin: 8px;
+    }
+</style>
 
-                    // removes/adds alert types and buttons based on truthy/falsy API status
-                    if(response.data) {
-                        alertElements.classList.remove('alert-danger');
-                        alertElements.classList.add('alert-success');
-                        buttonFalse.classList.add('d-none');
-                        buttonTrue.classList.remove('d-none');
-                    } else {
-                        alertElements.classList.remove('alert-success');
-                        alertElements.classList.add('alert-danger');
-                        buttonTrue.classList.add('d-none');
-                        buttonFalse.classList.remove('d-none');
-                    }
+<body>
+    <!-- display status as h1 html within Bootstrap alert class -->
+    <div class="alert" role="alert">
+        <h1 id="status"></h1>
+    </div>
 
-                    // makes the text within the 'status' id tags equal to the vars ____Msgs
-                    document.getElementById('status').innerText = mainMsg;
+    <!-- button to reset or log a walk, changes message based on API state -->
+    <a href="set/false" class="btn btn-secondary btn-lg m-2 d-none" id="btn-true" role="button">Reset to
+        "not-walked"</a>
+    <a href="set/true" class="btn btn-secondary btn-lg m-2 d-none" id="btn-false" role="button">I walked her!</a>
+
+    <!-- imports axios.js, checks integrity while doing so -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"
+        integrity="sha256-XmdRbTre/3RulhYk/cOBUMpYlaAp2Rpo/s556u0OIKk=" crossorigin="anonymous"></script>
+    <script>
+        // set up checkStatus function
+        checkStatus = () => {
+
+            // next line is only for local testing:
+            // axios.get('https://w-a-l-k.azurewebsites.net/status').then((response) => {
+
+            // next line is only for deployment TODO maybe there's a better way?:
+            axios.get('status').then((response) => {
+
+                /* sets var msg to either string based on
+                ternary operator checking truthy/falsy API status */
+                let mainMsg = response.data ?
+                    'Lila has been walked!' :
+                    'Lila has not been walked :(';
+
+                /* gets all the elements with the class name 'alert', puts into an array
+                 alertElements is set to equal the first/only element in the array */
+                let alertElements = document.getElementsByClassName('alert')[0];
+                let buttonTrue = document.getElementById('btn-true');
+                let buttonFalse = document.getElementById('btn-false');
+
+                // removes/adds alert types and buttons based on truthy/falsy API status
+                if (response.data) {
+                    alertElements.classList.remove('alert-danger');
+                    alertElements.classList.add('alert-success');
+                    buttonFalse.classList.add('d-none');
+                    buttonTrue.classList.remove('d-none');
+                } else {
+                    alertElements.classList.remove('alert-success');
+                    alertElements.classList.add('alert-danger');
+                    buttonTrue.classList.add('d-none');
+                    buttonFalse.classList.remove('d-none');
+                }
+
+                // makes the text within the 'status' id tags equal to the vars ____Msgs
+                document.getElementById('status').innerText = mainMsg;
+            });
+        };
+
+        // check the status on page load  
+        checkStatus();
+
+        // start polling for changes every 10 seconds, runs as long as page is active
+        setInterval(checkStatus, 10000);
+    </script>
+
+    <hr>
+
+    <!-- BEGIN GOOGLE MAPS div and JS -->
+    <div id="map-with-text">
+        <p>Maybe somewhere around here would be nice?</p>
+
+        <div id="map"></div>
+    </div>
+
+    <script>
+        var map, infoWindow;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 41.499, lng: -81.694 },
+                zoom: 15
+            });
+
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
                 });
-            };
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
 
-            // check the status on page load  
-            checkStatus();
-
-            // start polling for changes every 10 seconds, runs as long as page is active
-            setInterval(checkStatus, 10000);
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB26COqFSxqMXyXf38JA7jkqFRMqf0bAmo&callback=initMap">
         </script>
-    </body>
+    <!-- END GOOGLE MAPS div and JS -->
+
+</body>
+
 </html>
