@@ -4,7 +4,7 @@ const axios = require('axios');
 const schedule = require('node-schedule');
 const cors = require('cors');
 const app = express();
-const keyStoreUrl = 'https://api.keyvalue.xyz/e6bf679e/josh';
+const keyStoreUrl = 'https://api.keyvalue.xyz/b389543c/w-a-l-k';
 
 // cors allows access from different origins - without it, API wouldn't run due to Same-origin policy
 app.use(cors());
